@@ -1,0 +1,12 @@
+{
+  "name": "card-vault",
+  "version": "1.0.0",
+  "description": "Sports trading card inventory app with AI-assisted identification, value estimates, and visual PSA grade estimates.",
+  "private": true,
+  "scripts": {
+    "dev": "netlify dev"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
