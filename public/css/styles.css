@@ -1,26 +1,30 @@
 /* ============ Design tokens ============ */
 :root {
-  --bg: #0a0b10;
-  --surface: #14161f;
-  --surface-2: #1b1e2a;
-  --border: #272b3a;
-  --text: #f5f6fa;
-  --text-muted: #8a8fa3;
-  --accent: #e8b649;       /* gold — value / money */
-  --accent-2: #3dd6c5;      /* teal — secondary actions */
-  --danger: #e2574c;
-  --good: #3ecf8e;
-  --mid: #e8b649;
-  --low: #e2574c;
+  --bg: #0a0a0c;
+  --surface: #151619;
+  --surface-2: #1c1e22;
+  --border: #2a2c31;
+  --text: #f5f6f7;
+  --text-muted: #8d9199;
+  --silver: #c7cad0;
+  --accent: #3b82f6;        /* blue — primary actions / value */
+  --accent-strong: #2563eb;
+  --accent-2: #c7cad0;       /* silver — secondary emphasis */
+  --danger: #ef5b55;
+  --good: #34d399;
+  --mid: #f2b134;
+  --low: #ef5b55;
   --radius-lg: 20px;
   --radius-md: 14px;
   --radius-sm: 10px;
-  --shadow: 0 8px 24px rgba(0,0,0,0.35);
+  --shadow: 0 8px 24px rgba(0,0,0,0.4);
   --safe-bottom: env(safe-area-inset-bottom, 0px);
   --safe-top: env(safe-area-inset-top, 0px);
 }
 
 * { box-sizing: border-box; }
+
+[hidden] { display: none !important; }
 
 html, body {
   margin: 0;
@@ -63,9 +67,10 @@ button, input, select {
 .btn-block { width: 100%; }
 
 .btn-primary {
-  background: linear-gradient(135deg, var(--accent), #d49f2e);
-  color: #16140a;
+  background: var(--accent);
+  color: #ffffff;
 }
+.btn-primary:active { background: var(--accent-strong); }
 .btn-secondary {
   background: var(--surface-2);
   color: var(--text);
@@ -111,7 +116,7 @@ button, input, select {
   align-items: center;
   justify-content: center;
   padding: 24px;
-  background: radial-gradient(circle at 50% 0%, #1a1d2b 0%, #0a0b10 60%);
+  background: radial-gradient(circle at 50% 0%, #17191d 0%, #0a0a0c 60%);
 }
 .gate-card {
   width: 100%;
@@ -154,12 +159,12 @@ button, input, select {
 
 /* ============ Totals card ============ */
 .totals-card {
-  background: linear-gradient(135deg, var(--surface), var(--surface-2));
+  background: var(--surface);
   border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
   border-radius: var(--radius-lg);
   padding: 20px 22px;
   margin-bottom: 18px;
-  box-shadow: var(--shadow);
 }
 .totals-main { display: flex; flex-direction: column; gap: 4px; }
 .totals-label { color: var(--text-muted); font-size: 13px; text-transform: uppercase; letter-spacing: 0.08em; }
@@ -176,7 +181,7 @@ button, input, select {
   padding: 12px 14px;
   font-size: 15px;
 }
-.search-wrap input:focus { outline: 2px solid var(--accent-2); }
+.search-wrap input:focus { outline: 2px solid var(--accent); }
 
 .chips { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 2px; }
 .chip {
@@ -190,7 +195,7 @@ button, input, select {
   font-weight: 600;
   cursor: pointer;
 }
-.chip.is-active { background: var(--accent); color: #16140a; border-color: var(--accent); }
+.chip.is-active { background: var(--accent); color: #ffffff; border-color: var(--accent); }
 
 .sort-select {
   background: var(--surface);
@@ -362,7 +367,7 @@ button, input, select {
 
 .comps-list { display: flex; flex-direction: column; gap: 8px; }
 .comp-row { display: flex; justify-content: space-between; font-size: 13px; padding: 8px 10px; background: var(--surface-2); border-radius: var(--radius-sm); }
-.comp-row a { color: var(--accent-2); text-decoration: none; }
+.comp-row a { color: var(--accent); text-decoration: none; }
 .comp-price { font-weight: 700; }
 
 .psa-hero { display: flex; align-items: center; gap: 14px; margin-bottom: 12px; }
@@ -407,12 +412,12 @@ button, input, select {
   width: 58px;
   height: 58px;
   border-radius: 50%;
-  background: linear-gradient(135deg, var(--accent), #d49f2e);
-  color: #16140a;
+  background: var(--accent);
+  color: #ffffff;
   font-size: 28px;
   font-weight: 700;
   border: none;
-  box-shadow: 0 10px 24px rgba(232,182,73,0.35);
+  box-shadow: 0 10px 24px rgba(59,130,246,0.35);
   cursor: pointer;
   z-index: 20;
 }
