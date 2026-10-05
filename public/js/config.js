@@ -11,7 +11,7 @@
 // (see README.md "Set up Supabase").
 // ---------------------------------------------------------------------------
 window.CARD_VAULT_CONFIG = {
-  SUPABASE_URL: "YOUR_SUPABASE_PROJECT_URL",
-  SUPABASE_ANON_KEY: "YOUR_SUPABASE_ANON_KEY",
+  SUPABASE_URL: "https://wuombxgemgikjmuulo.supabase.co",
+  SUPABASE_ANON_KEY: "sb_publishable_V38pgJUoTKg6d5UzrHJx_A_tLdycmbj",
   STORAGE_BUCKET: "card-images",
 };
