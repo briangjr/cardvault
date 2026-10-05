@@ -319,16 +319,50 @@
     });
   }
 
+  // Retries a flaky network call a couple of times before giving up —
+  // helps with transient drops on weak wifi/cellular instead of failing
+  // the whole save over one bad request.
+  async function withRetry(fn, attempts = 3, delayMs = 1000) {
+    let lastErr;
+    for (let i = 0; i < attempts; i++) {
+      try {
+        return await fn();
+      } catch (err) {
+        lastErr = err;
+        if (i < attempts - 1) await new Promise((r) => setTimeout(r, delayMs * (i + 1)));
+      }
+    }
+    throw lastErr;
+  }
+
+  function friendlyUploadError(err) {
+    if (err && err.name === "TypeError") {
+      return "Couldn't reach your Supabase storage after a few tries. Check your connection, or that your Supabase project is online, and try again.";
+    }
+    return err?.message || "Couldn't save this card. Try again.";
+  }
+
   $("#btn-save-card").addEventListener("click", async () => {
     const btn = $("#btn-save-card");
     btn.disabled = true;
-    btn.textContent = "Saving...";
+    btn.textContent = "Resizing photos...";
     try {
-      const [frontUrl, backUrl] = await Promise.all([
-        CardDB.uploadImage(state.flow.frontFile, "fronts"),
-        CardDB.uploadImage(state.flow.backFile, "backs"),
+      const [frontForStorage, backForStorage] = await Promise.all([
+        Capture.resizeForStorage(state.flow.frontFile, 2200, 0.92, "front.jpg"),
+        Capture.resizeForStorage(state.flow.backFile, 2200, 0.92, "back.jpg"),
       ]);
-      const edgeUrls = await CardDB.uploadEdgeImages(state.flow.edgeFiles);
+      const edgesForStorage = await Promise.all(
+        state.flow.edgeFiles.map((f, i) => Capture.resizeForStorage(f, 1800, 0.92, `edge-${i}.jpg`))
+      );
+
+      btn.textContent = "Uploading photos...";
+      const [frontUrl, backUrl] = await Promise.all([
+        withRetry(() => CardDB.uploadImage(frontForStorage, "fronts")),
+        withRetry(() => CardDB.uploadImage(backForStorage, "backs")),
+      ]);
+      const edgeUrls = await withRetry(() => CardDB.uploadEdgeImages(edgesForStorage));
+
+      btn.textContent = "Saving...";
 
       const { card, value, psa_estimate } = state.flow.result;
       const valueMid = ((value?.estimate_low || 0) + (value?.estimate_high || 0)) / 2;
@@ -357,13 +391,13 @@
         psa_summary: psa_estimate?.summary || null,
       };
 
-      const saved = await CardDB.insertCard(record);
+      const saved = await withRetry(() => CardDB.insertCard(record));
       state.cards.unshift(saved);
       renderHome();
       showView("view-home");
       showToast("Saved to your inventory.");
     } catch (err) {
-      showToast(err.message || "Couldn't save this card. Try again.");
+      showToast(friendlyUploadError(err));
     } finally {
       btn.disabled = false;
       btn.textContent = "Save to inventory";
